@@ -1,0 +1,68 @@
+Design a clean, modern desktop web app called "TaskPilot AI" — a personal AI task intelligence assistant for software engineers. This must NOT look like Jira, Linear, or a generic indigo/blue SaaS dashboard, and must NOT look like a generic "AI product" template (no plain glowing orb with floating dots and nothing else). Visual identity:
+
+- Background: near-black (#0E1411), with a soft radial dark-green vignette (#16261D fading to #0E1411) for subtle depth, not flat black
+- Surface cards: slightly lifted dark panel (#161D19) with hairline borders (#232B26), 10-12px rounded corners
+- Signature accent color: sage/seafoam green (#8FCBA8, lighter variant #A8DABF, #B8E5CC) — used ONLY for the brand mark, AI-generated reasoning text, primary CTAs, live-status indicators, and active nav states. Do not use it decoratively elsewhere.
+- Priority/status tags use their own semantic colors at low opacity (12-15% bg, full-saturation text, thin matching border): red-coral (#F09595) for P0/critical, amber (#EF9F27) for P1/high, sage for "ready/low" — these stay visually distinct from the brand accent
+- Logo mark: small rounded-square icon (48px), dark green gradient fill (#2E5C44 to #16271E), thin border (#3D6B52), sparkle symbol in light sage (#B8E5CC) centered inside, with a soft pulsing glow halo behind it
+- Typography: Inter, sentence case everywhere, near-white primary text (#F4F8F5, never pure white), muted gray-green secondary text (#6B7A72 to #94A39B)
+- A recurring "live system" motif: small status lines in monospace font, low-opacity pulsing dots indicating active scanning/processing — this is what makes the product feel alive and working, not just decorated
+- Every AI-generated insight, rationale, or "why this rank" explanation is marked with a small sage sparkle icon and sage-tinted text, distinguishing AI reasoning from raw source data and from status tags
+- Overall feel: calm but alive — a premium personal AI tool that visibly feels like it's actively working on your behalf, not a static enterprise dashboard
+
+Generate these 6 screens:
+
+SCREEN 0 — Morning Greeting / Entry Screen (the FIRST screen, before the dashboard)
+- Full-bleed near-black background with soft radial dark-green vignette for depth
+- 8 small sage particle dots of varying size (3-5px) scattered around the screen, each with a soft glow (box-shadow), suggesting gentle ambient drift — not centered in a tight cluster, spread across the full canvas
+- Top-left or top-center: a small live-status line in monospace font, muted gray-green, with a pulsing sage dot beside it: "scanning jira · outlook · servicenow · slack · github"
+- Centered logo mark: 48px rounded-square icon with dark green gradient, sparkle symbol in light sage, with a soft glowing halo (blurred radial sage glow) pulsing behind it
+- Small muted monospace-style date/time line beneath: "Friday, June 19 · 8:14 AM"
+- Large two-tone headline, two lines, bold (600 weight), tight letter-spacing: first line bright near-white "Morning, Alex." — second line dimmer muted gray-green "3 things found you overnight."
+- Below that: 3 small pill-shaped tags in a row, semantic colors: "1 critical" (coral), "2 high" (amber), "plan ready" (sage)
+- Centered CTA button: pill-shaped, sage gradient fill (#B8E5CC to #8FCBA8), dark text, soft glow/shadow beneath it, text "See what's on deck" with a small arrow icon
+- Bottom center: tiny muted monospace text "last sync 2 min ago"
+- Nothing else on this screen — no nav, no sidebar. It should feel quiet, premium, and alive at once — like the agent has already been working before you opened the app
+
+SCREEN 1 — Daily Plan Dashboard (after clicking the Screen 0 CTA)
+- Top header: small sage logo mark + "TaskPilot AI" wordmark, top right shows a sage-tinted pill badge "Plan generated in 42s"
+- Greeting: "Good morning, Alex" with subtext "3 hidden tasks found today across 5 sources"
+- Left sidebar nav on near-black background: Daily Plan, All Tasks, Sources, Chat Assistant, Weekly Summary, Settings — sage highlight and left accent bar on the active item
+- "Your Top 3 Priorities Today" — lifted dark cards with hairline borders, each showing: task title, source tag, semantic priority pill, and below a thin divider a sage sparkle-icon line with the plain-English rationale ("P0 severity + VP escalation + SLA expires in 18h")
+- Below: "Rest of Today" — compact dark-card list with checkboxes, source tags, due times
+- Right-side panel: "Proactive Alerts" — sage-tinted icon circles next to each alert, quiet card style, not loud red alarm banners
+- Small stat strip: "5 sources synced", "3 hidden tasks found today", "Last sync: 2 min ago"
+
+SCREEN 2 — Unified Task View (all tasks)
+- Same dark sidebar
+- Filter bar: source, priority, deadline — pill-style dropdown filters
+- Dark card rows for each task: title, source badge, semantic priority pill, deadline, status pill
+- At least 2 rows show a small sage "merged from 2 sources" tag with sparkle icon to indicate AI deduplication
+- One row expanded showing merged sources side by side (original Jira ticket + matched email snippet) with a sage "92% match confidence" tag and a "View reasoning" link in sage
+
+SCREEN 3 — Conversational AI Chat Assistant
+- Chat layout on near-black background
+- AI messages have the small sage sparkle avatar; AI text sits in a subtly sage-tinted dark card
+- One exchange: "Why is the upload bug my #1 priority?" answered with structured bullet reasoning referencing the real source ticket
+- Second exchange: "Summarize the VP's email" answered with a short structured summary card
+- Input bar with sage-accented send button, suggested quick-prompt chips in soft sage-tinted pills
+
+SCREEN 4 — Source Ingestion / Extraction View
+- 4 connected source cards (Jira, ServiceNow, Outlook, Meeting Transcripts), dark cards with small sync-status dot and "last ingested" timestamp
+- Below: side-by-side "extraction in progress" panel — raw email snippet on the left in a plain neutral dark card, and on the right a structured task card with a sage sparkle badge showing it was AI-extracted, fields (Title, Priority, Deadline, Confidence Score, "Trace to source" link)
+- A soft sage banner: "Hidden action items found today: 3"
+
+SCREEN 5 — Weekly Summary / Standup Report
+- Week range header
+- Metric cards in slightly lifted dark surfaces: Tasks Completed, In Progress, Deferred, Hidden Tasks Surfaced
+- Simple horizontal bar/timeline chart of weekly completion, sage as the primary data color
+- "Standup-ready summary" card with a "Copy" button
+- Blockers section with avatar circles and quiet status pills
+
+General requirements across all screens:
+- Every priority or ranking decision visibly shows its reasoning via the sage-sparkle rationale pattern — consistent everywhere
+- Consistent near-black sidebar/background across Screens 1-5; Screen 0 stands alone as a distinct entry moment
+- Consistent left sidebar navigation on Screens 1-5
+- Realistic placeholder data referencing Jira, ServiceNow, Outlook, Slack, GitHub Issues, and meeting transcripts
+- High information density but never cramped — generous padding inside cards
+- Avoid generic AI-product cliches (plain centered glowing orb with no other content); favor details that suggest active work — live status text, real counts, traceable rationale

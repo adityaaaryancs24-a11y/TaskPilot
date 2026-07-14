@@ -1,0 +1,83 @@
+[00:00:00] DAVID PARK: Alright team, let's get started. It's 2 PM, Friday January 12. This is our Sprint 46 retro combined with Sprint 47 kick-off. Let's keep it to about 75 minutes. Sarah will join us later in the call.
+
+[00:01:30] DAVID PARK: Sprint 46 velocity — we completed 32 story points out of a committed 40. That's 80%, which is about our historical average. Three items carried over: the dashboard performance fix, the runbook, and the email template migration. We'll roll those into Sprint 47.
+
+[00:04:00] JORDAN LEE: I think we overcommitted a bit. The RBAC story was bigger than we estimated. Should have been 8 points not 5.
+
+[00:05:30] PRIYA SHARMA: Yeah, I agree. The PDF generation story I picked up ended up being easier than expected though, so that balanced out.
+
+[00:07:00] MARCUS WEBB: The main blocker for me was waiting on Alex's query layer changes for the dashboard performance fix. That's why mine carried over.
+
+[00:08:00] ALEX CHEN: Yeah, sorry about that. I got pulled into the bulk upload bug investigation and that took priority. The query refactor is ready now though.
+
+[00:10:00] DAVID PARK: OK, let's talk about what went well. Priya, the PDF generator?
+
+[00:10:30] PRIYA SHARMA: Yeah, that went smoothly. The React-email templates compiled cleanly, and streaming to S3 was straightforward. I'd recommend we use the same approach for the email template migration.
+
+[00:12:00] JORDAN LEE: The CI pipeline improvements Priya set up are great. We caught a regression in staging before it hit prod.
+
+[00:13:30] DAVID PARK: What didn't go well aside from the carry-overs?
+
+[00:14:00] MARCUS WEBB: Communication around the dashboard perf issue. I spent two days building a fix that conflicted with Alex's query layer because we didn't sync early enough.
+
+[00:15:00] ALEX CHEN: Fair point. I should have flagged the query layer changes sooner.
+
+[00:16:00] DAVID PARK: Let's make sure we do a quick dependency sync at the start of Sprint 47. OK, moving into planning.
+
+[00:20:00] DAVID PARK: Sprint 47 runs January 10 to January 23. We're already 5 days in so this is more of a mid-sprint adjustment than a full kick-off. Our main commitments: the bulk upload CSV feature, webhook notification service, and RBAC. Alex, you're owning the bulk upload story.
+
+[00:22:00] ALEX CHEN: PHOE-1145, yes. I've got the CSV parsing done. Need to finish the validation layer and hook up the frontend progress bar.
+
+[00:23:15] DAVID PARK: And the P1 — PHOE-1198. Alex, I'm assigning you ownership of the bulk upload fix. This is priority one. GlobalTech is blocked and the VP is involved. Jordan, you're on the retry handler issue. Priya, webhook service and timezone bug. Marcus, dashboard performance once Alex's changes are stable.
+
+[00:25:00] ALEX CHEN: Understood. The root cause is the synchronous CSV parser — it loads the entire file into memory. I'm switching to a streaming parser. Should have a fix by Monday.
+
+[00:26:30] DAVID PARK: Make sure you update the story points in Jira once you have a clearer picture of the remaining work.
+
+[00:28:00] JORDAN LEE: For my RBAC story — I need to start on the DB schema, but I'm waiting on the Confluence design doc from Alex. [crosstalk]
+
+[00:28:30] ALEX CHEN: Yeah, I'll get that doc shared by Wednesday. Sorry, been heads down on the upload bug.
+
+[00:29:00] PRIYA SHARMA: Alex, when you share that DB schema doc, could you also tag me? I want to make sure the webhook event store aligns with the RBAC model.
+
+[00:30:00] DAVID PARK: OK, let's move to the technical discussion. Alex, you wanted to walk through the bulk upload root cause?
+
+[00:31:00] ALEX CHEN: Yeah. So the issue is in csv-parse's sync API. We're using `parse(input, options)` which buffers the entire input. For files over about 500 rows with 12 columns each, we hit Node's default memory limit. The fix is to switch to the streaming API: `parser = parse(options)` then pipe the input stream through it row by row.
+
+[00:31:40] JORDAN LEE: That makes sense. Hey, speaking of — my auth token refresh PR #892 is ready for your review. It uses the same streaming principle but with a mutex for concurrent refresh requests. Could you take a look? It's blocking my story from moving to In Review.
+
+[00:32:30] ALEX CHEN: Sure, I'll look at it Monday morning before standup.
+
+[00:33:00] MARCUS WEBB: The dashboard query I mentioned — it's doing a full table scan on the invoices table. The fix adds a composite index on (account_id, created_at, status) and uses keyset pagination instead of offset. But it shares the query builder with Alex's upload validation, so we need to coordinate the merge.
+
+[00:35:00] ALEX CHEN: Let's sync on Monday after standup to plan the merge order.
+
+[00:36:00] DAVID PARK: Good. Alright, Sarah is joining now. Let me give her the floor.
+
+[00:55:00] SARAH MITCHELL: Sorry I'm late everyone — got out of another escalation call. Alex, I've been copied on the GlobalTech thread. Give me the status.
+
+[00:56:00] ALEX CHEN: Root cause identified — synchronous CSV parser memory issue. Fix is a streaming parser replacement. I'll have it in staging by Monday morning.
+
+[00:57:00] SARAH MITCHELL: Good. But I need more than just a code fix. Alex, I need you to also prepare a 3-slide RCA summary for the client call on Tuesday. Keep it non-technical. Focus on impact, resolution, and prevention. The VP of Finance at GlobalTech will be on the call and he doesn't care about parsers — he cares about his team being able to do month-end close.
+
+[00:59:00] ALEX CHEN: Got it. I'll put together a slide deck alongside the fix.
+
+[01:00:00] SARAH MITCHELL: David, I also want to make sure we have a solid prevention playbook. This is the second memory-related production issue this quarter.
+
+[01:01:00] DAVID PARK: Agreed. I'll add a tech debt story for adding memory monitoring to the payment service pipeline.
+
+[01:05:00] SARAH MITCHELL: OK, I have another call. David, wrap it up?
+
+[01:10:00] DAVID PARK: Sure. OK team, let's close out with action items. Before Monday standup at 10 AM:
+
+[01:11:00] DAVID PARK: Alex — bulk upload fix for the P1, sprint board update with estimates, and the 3-slide RCA deck for Tuesday. Jordan — finalize your PR and get it reviewed. Priya — kick off the reporting module story and resolve the CI failure on your timezone fix. Marcus — prepare the dashboard perf fix for merge once Alex's query changes are stable.
+
+[01:13:00] ALEX CHEN: Got it.
+
+[01:13:30] PRIYA SHARMA: Noted.
+
+[01:14:00] JORDAN LEE: Sounds good.
+
+[01:14:30] DAVID PARK: Alright, great retro and planning everyone. Enjoy your weekend — try not to think about production bugs. See you Monday.
+
+[01:15:00] MARCUS WEBB: Hah, you too.

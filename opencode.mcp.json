@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "taskpilot": {
+      "command": "python3",
+      "args": ["mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "backend"
+      },
+      "disabled": false,
+      "alwaysAllow": [
+        "list_tasks",
+        "get_task",
+        "get_plan",
+        "get_dashboard",
+        "get_team_metrics",
+        "get_dependency_analysis",
+        "inject_task"
+      ]
+    }
+  }
+}

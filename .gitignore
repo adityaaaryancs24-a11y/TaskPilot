@@ -1,0 +1,63 @@
+# --- Environment & Secrets ---
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# --- Python (backend + llmlayer) ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# --- Node.js (frontend) ---
+node_modules/
+.pnpm-store/
+pnpm-lock.yaml
+package-lock.json
+.yarn/
+
+# --- Build output ---
+frontend/dist/
+
+# --- Database ---
+*.db
+*.sqlite
+*.sqlite3
+db/*.db
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- OS ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/

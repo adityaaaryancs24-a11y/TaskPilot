@@ -1,0 +1,66 @@
+[
+  {
+    "id": "dedup_001",
+    "tasks": [
+      {
+        "id": "JIRA-123",
+        "title": "Fix data pipeline failure",
+        "description": "The data pipeline is failing intermittently"
+      },
+      {
+        "id": "EMAIL-001",
+        "title": "Data pipeline broken",
+        "description": "Pipeline keeps failing, please check"
+      }
+    ],
+    "expected_duplicate": true
+  },
+  {
+    "id": "dedup_002",
+    "tasks": [
+      {
+        "id": "JIRA-456",
+        "title": "Implement user authentication",
+        "description": "Add OAuth support"
+      },
+      {
+        "id": "JIRA-789",
+        "title": "Fix login page CSS",
+        "description": "Login page styling broken"
+      }
+    ],
+    "expected_duplicate": false
+  },
+  {
+    "id": "dedup_003",
+    "tasks": [
+      {
+        "id": "JIRA-101",
+        "title": "Deploy hotfix to production",
+        "description": "Hotfix for critical bug"
+      },
+      {
+        "id": "EMAIL-002",
+        "title": "Deploy hotfix to production",
+        "description": "Urgent: deploy hotfix"
+      }
+    ],
+    "expected_duplicate": true
+  },
+  {
+    "id": "dedup_004",
+    "tasks": [
+      {
+        "id": "JIRA-202",
+        "title": "Database migration script",
+        "description": "Write migration for new schema"
+      },
+      {
+        "id": "EMAIL-003",
+        "title": "Review PR for API changes",
+        "description": "Please review the new API endpoints"
+      }
+    ],
+    "expected_duplicate": false
+  }
+]

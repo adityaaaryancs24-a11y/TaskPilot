@@ -1,0 +1,51 @@
+[
+  {
+    "id": "priority_001",
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Fix P1 production bug",
+        "priority": "P1",
+        "deadline": "2026-06-22T10:21:42.411634+00:00"
+      },
+      {
+        "id": "task2",
+        "title": "Add new feature",
+        "priority": "P3",
+        "deadline": "2026-06-29T08:21:42.411634+00:00"
+      }
+    ],
+    "expected_rank": [
+      "task1",
+      "task2"
+    ]
+  },
+  {
+    "id": "priority_002",
+    "tasks": [
+      {
+        "id": "task3",
+        "title": "Documentation update",
+        "priority": "P3",
+        "deadline": null
+      },
+      {
+        "id": "task4",
+        "title": "Critical security patch",
+        "priority": "P0",
+        "deadline": "2026-06-22T09:21:42.411634+00:00"
+      },
+      {
+        "id": "task5",
+        "title": "Refactor auth module",
+        "priority": "P2",
+        "deadline": "2026-06-25T08:21:42.411634+00:00"
+      }
+    ],
+    "expected_rank": [
+      "task4",
+      "task5",
+      "task3"
+    ]
+  }
+]

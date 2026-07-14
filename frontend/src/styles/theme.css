@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --font-size: 15px;
+  --background: #F6F2E9;
+  --surface: #FFFDF8;
+  --sidebar: #0D0D0D;
+  --text-primary: #111111;
+  --text-secondary: #7A7A7A;
+  --text-muted: #B0A8A0;
+
+  --pastel-pink: #F7C5E6;
+  --pastel-yellow: #F5D66E;
+  --pastel-green: #BFD78D;
+  --pastel-blue: #C9D8FF;
+  --pastel-purple: #DCC7F7;
+  --pastel-orange: #FAD6B3;
+
+  --accent-black: #0D0D0D;
+  --border-light: #E9E4D8;
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.04);
+  --shadow-medium: 0 8px 32px rgba(0,0,0,0.08);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  --ring: #0D0D0D;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-sidebar: var(--sidebar);
+  --color-foreground: var(--text-primary);
+  --color-muted-foreground: var(--text-secondary);
+  --color-border: var(--border-light);
+  --color-ring: var(--ring);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
+
+:root.dark {
+  --background: #1A1A1A;
+  --surface: #2D2D2D;
+  --sidebar: #1A1A1A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0A8A0;
+  --text-muted: #7A7A7A;
+  --border-light: #3D3D3D;
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.2);
+  --shadow-medium: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h1 { font-size: 32px; }
+  h2 { font-size: 24px; }
+  h3 { font-size: 20px; }
+  h4 { font-size: 16px; }
+}
+
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+}
+
+@media (max-width: 640px) {
+  html { font-size: 13px; }
+}
+
+/* Utility classes */
+@media (max-width: 1024px) {
+  .responsive-grid { grid-template-columns: 1fr !important; }
+  .responsive-sidebar { display: none !important; }
+  .responsive-panel { width: 100% !important; position: fixed !important; right: 0 !important; z-index: 50 !important; }
+}

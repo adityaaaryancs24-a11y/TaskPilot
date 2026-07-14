@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskpilot-config
+  namespace: taskpilot
+data:
+  DATABASE_URL: "postgresql+asyncpg://taskpilot:taskpilot@postgres:5432/taskpilot"
+  REDIS_URL: "redis://redis:6379/0"
+  CELERY_BROKER_URL: "redis://redis:6379/1"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/2"
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+  PROMETHEUS_ENABLED: "true"
+  EXTRACTION_CONFIDENCE_THRESHOLD: "0.50"
+  PIPELINE_SYNC_INTERVAL_MINUTES: "15"

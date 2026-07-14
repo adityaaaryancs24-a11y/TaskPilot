@@ -1,0 +1,17 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #0D0D0D;
+  color: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input, textarea, button {
+  font-family: inherit;
+}

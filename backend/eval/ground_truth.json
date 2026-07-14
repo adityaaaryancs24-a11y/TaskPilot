@@ -1,0 +1,52 @@
+{
+  "expected_action_items": [
+    {"title": "Prepare the live metrics dashboard for Friday stakeholder demo", "source_type": "email"},
+    {"title": "Loop in finance before Friday to avoid invoice delay", "source_type": "email"},
+    {"title": "Fix login page validation error", "source_type": "jira"},
+    {"title": "API rate limiting for external integrations", "source_type": "jira"},
+    {"title": "Upgrade PostgreSQL connection pool", "source_type": "jira"},
+    {"title": "Dark mode toggle for dashboard", "source_type": "jira"},
+    {"title": "E2E tests for checkout flow", "source_type": "jira"},
+    {"title": "WebSocket keepalive heartbeat", "source_type": "jira"},
+    {"title": "Stakeholder demo dashboard prep", "source_type": "jira"},
+    {"title": "Fix duplicate task detection", "source_type": "jira"},
+    {"title": "Login service returning 503 customer authentication broken", "source_type": "jira"},
+    {"title": "Implement backoff or reduce poll frequency for GitHub rate limits", "source_type": "email"},
+    {"title": "Rotate all API tokens exposed in logs", "source_type": "email"},
+    {"title": "Enable encryption for database backups", "source_type": "email"},
+    {"title": "Document the dedup logic for the user guide", "source_type": "email"},
+    {"title": "Bring sprint retrospective notes over lunch", "source_type": "email"}
+  ],
+  "expected_dedup_pairs": [
+    {"task1_id": "email_001", "task2_id": "email_009", "should_merge": false},
+    {"task1_id": "PROJ-101", "task2_id": "PROJ-105", "should_merge": false}
+  ],
+  "expected_cross_source_links": [
+    {"task1_id": "JIRA-1234", "task2_id": "email_008", "should_link": true},
+    {"task1_id": "JIRA-1234", "task2_id": "email_004", "should_link": false}
+  ],
+  "expected_priority_order": [
+    "JIRA-1234",
+    "PROJ-103",
+    "PROJ-107",
+    "PROJ-101",
+    "PROJ-106",
+    "PROJ-102",
+    "PROJ-110",
+    "PROJ-105",
+    "PROJ-108",
+    "PROJ-104",
+    "PROJ-109"
+  ],
+  "expected_rationale_keywords": {
+    "JIRA-1234": ["deadline", "P1", "customer", "severity"],
+    "PROJ-103": ["deadline", "P0", "blocks", "severity"],
+    "PROJ-107": ["deadline", "P0", "urgent", "deadline_urgency"]
+  },
+  "expected_scores": {
+    "JIRA-1234": 70,
+    "PROJ-103": 65,
+    "PROJ-107": 60,
+    "PROJ-104": 20
+  }
+}

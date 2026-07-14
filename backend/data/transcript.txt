@@ -1,0 +1,47 @@
+TaskPilot Sprint Planning — June 19, 2026
+Attendees: Sarah (PM), Mike (Tech Lead), Jen (Backend), Mia (Design), Alex (Frontend)
+Duration: 45 minutes
+
+---
+
+**Opening (00:00 - 05:00)**
+Sarah: Welcome everyone. Let's review sprint progress and plan for the stakeholder demo on Friday.
+Mike: Noted. Let's start with blockers.
+
+**Blockers Discussion (05:00 - 12:00)**
+Jen: The DB migration script is ready for QA but we need someone to review it. It's been sitting for 2 days.
+Sarah: I'll ping the QA team after this meeting. Mike, can you prioritize this?
+Mike: Yes, let's get it reviewed today. It's blocking the v2 schema rollout.
+Alex: The dashboard charts in Safari issue is still unresolved. We've tried multiple workarounds but the WebGL context loss seems to be a Safari-specific bug.
+Mike: Let's consider using Canvas2D fallback for Safari. Alex, can you investigate?
+Alex: I'll look into it this afternoon.
+
+**Demo Prep (12:00 - 25:00)**
+Sarah: For Friday's demo, we need the live metrics dashboard working with real data. This is the top priority.
+Mike: Agreed. The sync engine is working but we need the dashboard UI to show actual metrics, not placeholder data.
+Mia: I can help with the UI polish if needed. The dashboard layout is ready, just needs the data binding.
+Jen: The API endpoints are all returning data. The frontend just needs to wire up the charts.
+Alex: I'll pair with Jen on the data binding after the Safari fix.
+Sarah: Great. Let's also make sure the WebSocket real-time updates are working for the demo.
+Mike: The WebSocket reconnection issue might be a problem for the demo. Let's patch it with a keepalive ping.
+
+**Capacity Planning (25:00 - 35:00)**
+Sarah: Next sprint, we need to address the tech debt items. The memory leak in the sync engine is concerning.
+Mike: I'll allocate one backend engineer to the memory leak. Jen, can you own that?
+Jen: Yes, but I'll need to finish the migration QA first.
+Sarah: The dark mode feature request from enterprise customers — should we schedule it?
+Mike: Let's defer it to the next release. P3 priority.
+Sarah: Agreed. Let's focus on the P0 and P1 items for this sprint.
+
+**Action Items (35:00 - 45:00)**
+1. Mike: Review DB migration script by EOD today
+2. Alex: Investigate Canvas2D fallback for Safari charts
+3. Alex + Jen: Wire up dashboard data binding for Friday demo
+4. Mike: Patch WebSocket keepalive ping before Friday
+5. Jen: Own memory leak fix (next sprint)
+6. All: Prepare demo environment by Thursday EOD
+7. Sarah: Schedule design review for onboarding flow
+8. Mike: Investigate P0 priority ranking bug in prioritization algorithm
+
+**Next Meeting**
+Daily standup tomorrow 10am.

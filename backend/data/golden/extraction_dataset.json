@@ -1,0 +1,73 @@
+[
+  {
+    "id": "extract_001",
+    "text": "Can you please fix the upload bug? It's blocking the release. Also, remember to update the documentation.",
+    "expected_tasks": [
+      {
+        "summary": "Fix upload bug",
+        "priority_hint": "high"
+      },
+      {
+        "summary": "Update documentation",
+        "priority_hint": "medium"
+      }
+    ]
+  },
+  {
+    "id": "extract_002",
+    "text": "The auth service is down. Could someone investigate immediately? P1 incident.",
+    "expected_tasks": [
+      {
+        "summary": "Investigate auth service outage",
+        "priority_hint": "critical"
+      }
+    ]
+  },
+  {
+    "id": "extract_003",
+    "text": "Please review the PR for the new feature and schedule a demo with the team.",
+    "expected_tasks": [
+      {
+        "summary": "Review PR for new feature",
+        "priority_hint": "medium"
+      },
+      {
+        "summary": "Schedule demo with team",
+        "priority_hint": "low"
+      }
+    ]
+  },
+  {
+    "id": "extract_004",
+    "text": "Just a heads up, the deployment went smoothly. No action needed.",
+    "expected_tasks": []
+  },
+  {
+    "id": "extract_005",
+    "text": "TODO: Fix memory leak in scheduler. FIXME: Add pagination to search results.",
+    "expected_tasks": [
+      {
+        "summary": "Fix memory leak in scheduler",
+        "priority_hint": "high"
+      },
+      {
+        "summary": "Add pagination to search results",
+        "priority_hint": "medium"
+      }
+    ]
+  },
+  {
+    "id": "extract_006",
+    "text": "Make sure to deploy the hotfix by EOD. Don't forget to update the SSL certificates.",
+    "expected_tasks": [
+      {
+        "summary": "Deploy the hotfix by EOD",
+        "priority_hint": "critical"
+      },
+      {
+        "summary": "Update SSL certificates",
+        "priority_hint": "high"
+      }
+    ]
+  }
+]

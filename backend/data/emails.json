@@ -1,0 +1,136 @@
+[
+  {
+    "id": "email_001",
+    "subject": "Sprint review prep — need dashboard by Friday",
+    "body_preview": "Hey team, the stakeholder demo is on Friday. We need the live metrics dashboard ready with real data. Can we prioritize this over the new feature work?",
+    "body_content": "Hey team,\n\nThe stakeholder demo is this Friday at 2pm. We need the live metrics dashboard to be fully functional with real data flowing from all sources. Let's pause new feature development and focus on this.\n\nThanks,\nSarah (PM)",
+    "from": "sarah.pm@taskpilot.ai",
+    "receivedDateTime": "2026-06-18T09:30:00Z",
+    "isRead": false,
+    "priority": "P0",
+    "deadline": "2026-06-21T14:00:00Z"
+  },
+  {
+    "id": "email_002",
+    "subject": "RE: API rate limiting — we're hitting GitHub limits",
+    "body_preview": "We're getting 429s from GitHub API during sync. Need to implement backoff or reduce poll frequency.",
+    "body_content": "The sync engine is hitting GitHub API rate limits every 15 minutes. We need exponential backoff or increase the poll interval to at least 5 minutes. Also, consider using conditional requests with ETags.\n\n- Dev team",
+    "from": "dev-team@taskpilot.ai",
+    "receivedDateTime": "2026-06-18T10:15:00Z",
+    "isRead": true,
+    "priority": "P1",
+    "deadline": null
+  },
+  {
+    "id": "email_003",
+    "subject": "New feature request: Dark mode toggle",
+    "body_preview": "Users are requesting dark mode for the dashboard. Do we have capacity this sprint?",
+    "body_content": "Several enterprise customers have requested dark mode support for the dashboard UI. It would be a nice-to-have for the upcoming release. Let's discuss in the next sprint planning.\n\nBest,\nAlice (Customer Success)",
+    "from": "alice.cs@taskpilot.ai",
+    "receivedDateTime": "2026-06-18T11:00:00Z",
+    "isRead": true,
+    "priority": "P3",
+    "deadline": null
+  },
+  {
+    "id": "email_004",
+    "subject": "URGENT: Production incident — login service down",
+    "body_preview": "Users cannot log in. The auth service is returning 503. Need immediate investigation.",
+    "body_content": "Production incident reported at 10:45 UTC. The login service is down, returning 503 errors. All hands on deck — this is blocking all users. Root cause is unknown, possibly database connection pool exhaustion.\n\n-Oncall",
+    "from": "oncall@taskpilot.ai",
+    "receivedDateTime": "2026-06-18T10:50:00Z",
+    "isRead": false,
+    "priority": "P0",
+    "deadline": "2026-06-18T12:00:00Z"
+  },
+  {
+    "id": "email_005",
+    "subject": "Design review for new onboarding flow",
+    "body_preview": "The new onboarding designs are ready for review. Please provide feedback by EOD Wednesday.",
+    "body_content": "Hi everyone,\n\nThe Figma prototypes for the revamped onboarding flow are ready. Key changes include:\n- 3-step wizard instead of 5-step\n- Tooltip guides for first-time users\n- Skip option for power users\n\nPlease review and leave comments by Wednesday EOD.\n\nCheers,\nMia (Design)",
+    "from": "mia.design@taskpilot.ai",
+    "receivedDateTime": "2026-06-17T14:30:00Z",
+    "isRead": true,
+    "priority": "P2",
+    "deadline": "2026-06-19T23:59:00Z"
+  },
+  {
+    "id": "email_006",
+    "subject": "Database migration script — QA needed",
+    "body_preview": "The v2 schema migration script is ready for QA review. Affects users, tasks, and analytics tables.",
+    "body_content": "The migration script for schema v2 is ready in the `migrations/v2/` directory. It affects 3 tables: users (adds timezone column), tasks (adds tags column), and analytics (deprecates old metrics). Please QA and sign off before we roll to staging.\n\n-Jen (Backend)",
+    "from": "jen.dev@taskpilot.ai",
+    "receivedDateTime": "2026-06-17T16:00:00Z",
+    "isRead": false,
+    "priority": "P1",
+    "deadline": "2026-06-20T23:59:00Z"
+  },
+  {
+    "id": "email_007",
+    "subject": "Weekly sync agenda — June 20",
+    "body_preview": "Agenda: 1) Sprint progress 2) Blockers 3) Demo prep 4) Capacity planning",
+    "body_content": "Hi team,\n\nAgenda for this week's sync:\n1. Sprint progress update (10 min)\n2. Blocker discussion (10 min)\n3. Friday stakeholder demo prep (15 min)\n4. Next sprint capacity planning (10 min)\n5. AOB\n\nPlease add your items to the doc before the meeting.\n\n-Sarah",
+    "from": "sarah.pm@taskpilot.ai",
+    "receivedDateTime": "2026-06-19T08:00:00Z",
+    "isRead": true,
+    "priority": "P2",
+    "deadline": "2026-06-20T15:00:00Z"
+  },
+  {
+    "id": "email_008",
+    "subject": "VP escalation — customer login issue (JIRA-1234)",
+    "body_preview": "The VP is asking about the login bug. Need an update by noon.",
+    "body_content": "Team,\n\nThe VP just asked about the login issue that was reported yesterday. This is JIRA-1234. She wants a status update and ETA on the fix by noon today. Please prioritize this — it's a P1 now due to customer escalation.\n\nAlso, Adwika, can you prepare a summary of what went wrong for the post-mortem?\n\nThanks,\nSarah (PM)",
+    "from": "sarah.pm@taskpilot.ai",
+    "receivedDateTime": "2026-06-19T09:30:00Z",
+    "isRead": false,
+    "priority": "P1",
+    "deadline": "2026-06-19T12:00:00Z",
+    "vp_escalation": true,
+    "customer_facing": true
+  },
+  {
+    "id": "email_009",
+    "subject": "RE: Security audit findings",
+    "body_preview": "The Q2 security audit identified 3 critical vulnerabilities. Fixes required by next sprint.",
+    "body_content": "Hi team,\n\nThe Q2 security audit report is in. There are 3 critical vulnerabilities that need attention:\n1. API token exposure in logs (Saatvika, please rotate all tokens)\n2. Unencrypted database backups (Adwika, enable encryption)\n3. Missing rate limiting on auth endpoints\n\nThese must be fixed before the next sprint release.\n\n-Security Team",
+    "from": "security@taskpilot.ai",
+    "receivedDateTime": "2026-06-17T13:00:00Z",
+    "isRead": true,
+    "priority": "P0",
+    "deadline": "2026-06-22T23:59:00Z"
+  },
+  {
+    "id": "email_010",
+    "subject": "Customer demo prep — Adwika leading the walkthrough",
+    "body_preview": "Adwika, you're leading the customer demo on Monday. Please prepare the walkthrough script.",
+    "body_content": "Adwika,\n\nYou're assigned to lead the customer demo on Monday at 10am. Please prepare a walkthrough script covering:\n- The new dashboard features\n- Task prioritization flow\n- The AI chat assistant\n\nAlso, Saatvika, please ensure the demo environment is stable and has realistic data.\n\nThanks,\nSarah",
+    "from": "sarah.pm@taskpilot.ai",
+    "receivedDateTime": "2026-06-19T14:00:00Z",
+    "isRead": false,
+    "priority": "P2",
+    "deadline": "2026-06-21T10:00:00Z"
+  },
+  {
+    "id": "email_011",
+    "subject": "Question: How does the deduplication work?",
+    "body_preview": "Can someone explain the dedup logic? I'm seeing duplicate tasks from Jira and email.",
+    "body_content": "Hi team,\n\nI noticed that tasks from Jira and emails sometimes appear as duplicates. Can someone walk me through the deduplication algorithm? Should I worry about losing context when tasks are merged?\n\nAlso, Saatvika, can you document the dedup logic for the user guide?\n\nThanks,\nNewDev",
+    "from": "newdev@taskpilot.ai",
+    "receivedDateTime": "2026-06-18T15:30:00Z",
+    "isRead": true,
+    "priority": "P3",
+    "deadline": null
+  },
+  {
+    "id": "email_012",
+    "subject": "Team lunch — Friday at 1pm",
+    "body_preview": "We're ordering lunch on Friday. Please RSVP with your preference.",
+    "body_content": "Hi everyone,\n\nWe're ordering lunch this Friday at 1pm. Please reply with your preference:\n- Option A: Pizza\n- Option B: Sandwiches\n- Option C: Salad\n\nAlso, Adwika, please bring the sprint retrospective notes so we can review them over lunch.\n\n-Sarah",
+    "from": "sarah.pm@taskpilot.ai",
+    "receivedDateTime": "2026-06-19T11:00:00Z",
+    "isRead": false,
+    "priority": "P3",
+    "deadline": "2026-06-20T13:00:00Z"
+  }
+]
