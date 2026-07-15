@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import RedirectResponse
 
 from models.task import (
     ChatRequest,
@@ -22,6 +24,7 @@ from core.state import (
     get_user_preference_boosts,
     get_daily_snapshots,
     save_state,
+    link_pr_to_task,  # NEW — see "Still to do" below, not yet implemented in core/state.py
 )
 from core.agent import run_pipeline, reprioritize_with_injection
 from core.qa import answer_question
@@ -31,6 +34,7 @@ from core.websocket_manager import ws_manager
 from core.dependency_analyzer import DependencyAnalyzer
 from core.memory import memory_system
 from core.calendar_planner import CalendarPlanner
+from core.pr_linker import extract_linked_issue_numbers  # NEW — see "Still to do" below, not yet created
 from core.prometheus_metrics import (
     task_count,
     extracted_task_count,
@@ -40,6 +44,105 @@ from core.prometheus_metrics import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# NEW — used by the OAuth callback redirect below. Add FRONTEND_URL to backend/.env.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+
+
+@router.get("/auth/github/login")
+async def github_login():
+    """Redirect the browser to GitHub's consent screen (the page in your screenshot)."""
+    from core.github_oauth import build_authorize_url
+
+    try:
+        url = build_authorize_url()
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return RedirectResponse(url)
+
+
+
+@router.get("/auth/github/callback")
+async def github_callback(code: str = Query(...), state: str = Query(...)):
+    from core.github_oauth import exchange_code_for_token
+    try:
+        result = await exchange_code_for_token(code, state)
+    except Exception as e:
+        logger.error("GitHub OAuth callback failed: %s", e)
+        return RedirectResponse(f"{FRONTEND_URL}/settings?tab=integrations&github_error=1")
+    return RedirectResponse(
+        f"{FRONTEND_URL}/settings?tab=integrations&github_connected=1&login={result['github_login']}"
+    )
+
+
+@router.get("/auth/github/status")
+async def github_status():
+    from core.github_oauth import get_connection
+
+    conn = get_connection()
+    if not conn:
+        return {"connected": False}
+    return {"connected": True, "github_login": conn["github_login"], "connected_at": conn["connected_at"]}
+
+
+@router.post("/auth/github/disconnect")
+async def github_disconnect():
+    from core.github_oauth import disconnect
+
+    disconnect()
+    return {"connected": False}
+
+
+@router.post("/webhooks/github")
+async def github_webhook(request: Request):
+    """Real-time sync: GitHub pushes issue/PR events here instead of us polling.
+    Configure this URL as the OAuth App / repo webhook target, content-type
+    application/json, events: issues, issue_comment, pull_request."""
+    event_type = request.headers.get("X-GitHub-Event", "")
+    payload = await request.json()
+
+    if event_type == "issues" and payload.get("action") in ("opened", "reopened", "edited"):
+        issue = payload.get("issue", {})
+        logger.info("GitHub webhook: issues action=%s issue=#%s", payload.get("action"), issue.get("number"))
+
+        inject_req = InjectRequest(
+            title=issue.get("title", "Untitled GitHub issue"),
+            description=issue.get("body") or "",
+            source_type="github",
+            owner=(issue.get("assignee") or {}).get("login"),
+        )
+        if store.current_plan is None:
+            await run_pipeline()
+        await reprioritize_with_injection(inject_req)
+
+    # NEW — auto-detect PR -> task links from PR body ("Fixes #12" etc.)
+    elif event_type == "pull_request" and payload.get("action") in ("opened", "edited", "synchronize"):
+        pr = payload.get("pull_request", {})
+        logger.info(
+            "GitHub webhook: pull_request action=%s pr=#%s",
+            payload.get("action"),
+            pr.get("number"),
+        )
+
+        linked_issue_numbers = extract_linked_issue_numbers(pr.get("body") or "")
+        for issue_num in linked_issue_numbers:
+            await link_pr_to_task(
+                task_id=f"github-{issue_num}",
+                pr_url=pr.get("html_url", ""),
+                pr_number=pr.get("number"),
+                source="auto",
+            )
+        if linked_issue_numbers:
+            logger.info(
+                "PR #%s auto-linked to task(s): %s",
+                pr.get("number"),
+                ", ".join(f"github-{n}" for n in linked_issue_numbers),
+            )
+
+    else:
+        logger.info("GitHub webhook: ignoring event type=%s action=%s", event_type, payload.get("action"))
+
+    return {"ok": True}
 
 
 @router.websocket("/ws")
@@ -71,7 +174,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @router.get("/api/health")
 async def health():
-    import os
+    import os as _os
 
     summary = store.get_state_summary()
     connector_status = get_connector_status()
@@ -79,14 +182,12 @@ async def health():
     jira_c = next((c for c in connector_status if c["name"] == "Jira"), {})
     github_c = next((c for c in connector_status if c["name"] == "GitHub"), {})
 
-    llm_key = os.environ.get("LLM_API_KEY") or os.environ.get("XAI_API_KEY", "")
+    llm_key = _os.environ.get("LLM_API_KEY") or _os.environ.get("XAI_API_KEY", "")
 
-    # Check Redis connectivity
     from core.cache import health_check as redis_health
 
     redis_ok = await redis_health()
 
-    # Check DB connectivity
     from core.database import engine
 
     db_ok = engine is not None
@@ -268,6 +369,47 @@ async def delete_task(task_id: str):
             notification_service.schedule(narrative=f"Deleted task '{removed.title}'")
             return {"status": "ok", "task_id": task_id, "title": removed.title}
     raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+
+# NEW — manual PR<->task linking (auto-linking happens in the webhook handler above)
+@router.post("/api/tasks/{task_id}/link-pr")
+async def link_pr(task_id: str, body: dict):
+    pr_url = body.get("pr_url", "")
+    if not pr_url:
+        raise HTTPException(status_code=400, detail="pr_url required")
+    task = next((t for t in store.current_tasks if t.id == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+    await link_pr_to_task(task_id=task_id, pr_url=pr_url, source="manual")
+    await ws_manager.broadcast(
+        "broadcast",
+        "tasks_updated",
+        [t.model_dump(mode="json") for t in store.current_tasks],
+    )
+    return {"status": "ok", "task_id": task_id, "pr_url": pr_url}
+
+
+@router.delete("/api/tasks/{task_id}/link-pr/{pr_number}")
+async def unlink_pr(task_id: str, pr_number: int):
+    task = next((t for t in store.current_tasks if t.id == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+    if not hasattr(task, "linked_prs") or task.linked_prs is None:
+        raise HTTPException(status_code=404, detail="No linked PRs on this task")
+
+    before = len(task.linked_prs)
+    task.linked_prs = [p for p in task.linked_prs if p.get("pr_number") != pr_number]
+    if len(task.linked_prs) == before:
+        raise HTTPException(status_code=404, detail=f"PR #{pr_number} not linked to {task_id}")
+
+    await save_state(store)
+    await ws_manager.broadcast(
+        "broadcast",
+        "tasks_updated",
+        [t.model_dump(mode="json") for t in store.current_tasks],
+    )
+    return {"status": "ok", "task_id": task_id, "pr_number": pr_number}
 
 
 @router.put("/api/tasks/reorder")

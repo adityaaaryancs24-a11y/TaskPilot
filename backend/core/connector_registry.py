@@ -10,41 +10,26 @@ load_dotenv()
 if not os.environ.get("LLM_API_KEY") and os.environ.get("XAI_API_KEY"):
     os.environ["LLM_API_KEY"] = os.environ["XAI_API_KEY"]
 
-from core.connectors.jira_connector import JiraConnector
-from core.connectors.github_connector import GitHubConnector
-from core.connectors.outlook_connector import OutlookConnector
+# NOTE (MCP migration): jira_connector, outlook_connector, and
+# servicenow_connector are DISABLED, not deleted — they did direct REST/PAT
+# calls with a single shared credential and no per-user auth. GitHub is now
+# served via the MCP-based connector (per-user OAuth + MCP tool calls,
+# see core/github_oauth.py + core/mcp_client.py). Re-enable the others the
+# same way (OAuth login route + MCP server) when it's their turn.
+from core.connectors.github_mcp_connector import GitHubMCPConnector
 from core.connectors.slack_connector import SlackConnector
-from core.connectors.servicenow_connector import ServiceNowConnector
 from core.connectors.transcript_connector import TranscriptConnector
 
-# Lazy connector initialization — env vars are loaded before creation
-_JIRA_CONNECTOR = None
 _GITHUB_CONNECTOR = None
-_OUTLOOK_CONNECTOR = None
 _SLACK_CONNECTOR = None
-_SERVICENOW_CONNECTOR = None
 _TRANSCRIPT_CONNECTOR = None
-
-
-def _get_jira():
-    global _JIRA_CONNECTOR
-    if _JIRA_CONNECTOR is None:
-        _JIRA_CONNECTOR = JiraConnector()
-    return _JIRA_CONNECTOR
 
 
 def _get_github():
     global _GITHUB_CONNECTOR
     if _GITHUB_CONNECTOR is None:
-        _GITHUB_CONNECTOR = GitHubConnector()
+        _GITHUB_CONNECTOR = GitHubMCPConnector()
     return _GITHUB_CONNECTOR
-
-
-def _get_outlook():
-    global _OUTLOOK_CONNECTOR
-    if _OUTLOOK_CONNECTOR is None:
-        _OUTLOOK_CONNECTOR = OutlookConnector()
-    return _OUTLOOK_CONNECTOR
 
 
 def _get_slack():
@@ -52,13 +37,6 @@ def _get_slack():
     if _SLACK_CONNECTOR is None:
         _SLACK_CONNECTOR = SlackConnector()
     return _SLACK_CONNECTOR
-
-
-def _get_servicenow():
-    global _SERVICENOW_CONNECTOR
-    if _SERVICENOW_CONNECTOR is None:
-        _SERVICENOW_CONNECTOR = ServiceNowConnector()
-    return _SERVICENOW_CONNECTOR
 
 
 def _get_transcript():
@@ -69,10 +47,10 @@ def _get_transcript():
 
 
 connector_registry: dict[str, object] = {
-    "jira": _get_jira(),
-    "defects": _get_servicenow(),
-    "emails": _get_outlook(),
     "transcript": _get_transcript(),
     "github": _get_github(),
     "slack": _get_slack(),
+    # "jira": _get_jira(),          # disabled — pending MCP migration
+    # "defects": _get_servicenow(), # disabled — pending MCP migration
+    # "emails": _get_outlook(),     # disabled — pending MCP migration
 }

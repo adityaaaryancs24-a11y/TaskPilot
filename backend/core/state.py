@@ -140,7 +140,50 @@ async def save_feedback(task_id: str, action: str, preference: str):
     except Exception:
         _save_feedback_sync(task_id, action, preference)
 
+async def link_pr_to_task(
+    task_id: str, pr_url: str, pr_number: Optional[int] = None, source: str = "manual"
+) -> Optional[Task]:
+    """Attach a GitHub PR to a task — called either from the webhook handler
+    (source="auto") or the manual /link-pr endpoint (source="manual").
+    Dedupes by pr_number (falling back to pr_url if the number is unknown)
+    so repeated webhook deliveries or PR edits don't create duplicates, and
+    a manual link is never silently downgraded back to auto."""
+    with store._lock:
+        task = next((t for t in store.current_tasks if t.id == task_id), None)
+        if task is None:
+            logger.warning("link_pr_to_task: task %s not found, skipping", task_id)
+            return None
 
+        if task.linked_prs is None:
+            task.linked_prs = []
+
+        key = pr_number if pr_number is not None else pr_url
+        existing = next(
+            (
+                p
+                for p in task.linked_prs
+                if (p.get("pr_number") if pr_number is not None else p.get("pr_url")) == key
+            ),
+            None,
+        )
+        if existing:
+            existing["pr_url"] = pr_url
+            if pr_number is not None:
+                existing["pr_number"] = pr_number
+            if source == "manual":
+                existing["source"] = "manual"
+        else:
+            task.linked_prs.append(
+                {
+                    "pr_url": pr_url,
+                    "pr_number": pr_number,
+                    "source": source,
+                    "linked_at": datetime.now(timezone.utc).isoformat(),
+                }
+            )
+
+    await save_state(store.current_tasks, store.current_plan)
+    return task
 async def get_user_preference_boosts() -> dict[str, float]:
     try:
         return await db_get_user_preference_boosts()

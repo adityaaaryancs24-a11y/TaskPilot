@@ -4,9 +4,12 @@ import { Card } from "../shared/Card";
 import { getMemoryPreferences, getHealth, WebSocketEvent } from "../../api/taskpilot";
 import { useWebSocket } from "../../hooks/useWebSocket";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
 const SETTINGS_SECTIONS = [
   { id: "profile", label: "Profile", icon: User },
   { id: "preferences", label: "Preferences", icon: Palette },
+  { id: "integrations", label: "Integrations", icon: Key },
   { id: "theme", label: "Theme", icon: Sun },
   { id: "shortcuts", label: "Shortcuts", icon: Keyboard },
   { id: "notifications", label: "Notifications", icon: Bell, disabled: true },
@@ -16,11 +19,22 @@ const SETTINGS_SECTIONS = [
 ];
 
 export function Settings() {
-  const [activeSection, setActiveSection] = useState("preferences");
+  const [activeSection, setActiveSection] = useState(() => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("tab") || "preferences";
+});
   const [prefs, setPrefs] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [health, setHealth] = useState<any>(null);
+  const [githubStatus, setGithubStatus] = useState<{ connected: boolean; github_login?: string }>({ connected: false });
+
+  const refreshGithubStatus = useCallback(() => {
+    fetch(`${API_BASE}/auth/github/status`)
+      .then(r => r.json())
+      .then(setGithubStatus)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     getMemoryPreferences()
@@ -29,6 +43,10 @@ export function Settings() {
       .finally(() => setLoading(false));
     getHealth().then(h => setHealth(h)).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    refreshGithubStatus();
+  }, [refreshGithubStatus]);
 
   const handleSave = () => {
     setSaved(true);
@@ -108,6 +126,36 @@ export function Settings() {
                 </button>
               </div>
             </>
+          )}
+
+          {activeSection === "integrations" && (
+            <Card variant="blue" shadow>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
+                <Key size={14} /> <span style={{ fontSize: 13, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif" }}>Connected Apps</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0" }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#111111" }}>GitHub</div>
+                  <div style={{ fontSize: 12, color: "#7A7A7A" }}>
+                    {githubStatus.connected ? `Connected as @${githubStatus.github_login}` : "Not connected"}
+                  </div>
+                </div>
+                {githubStatus.connected ? (
+                  <button
+                    onClick={() => {
+                      fetch(`${API_BASE}/auth/github/disconnect`, { method: "POST" }).then(refreshGithubStatus);
+                    }}
+                    style={{ background: "#F6F2E9", color: "#111111", border: "1px solid #E9E4D8", padding: "8px 16px", borderRadius: 10, fontSize: 12, cursor: "pointer", fontFamily: "'IBM Plex Mono', monospace" }}>
+                    Disconnect
+                  </button>
+                ) : (
+                  <a href={`${API_BASE}/auth/github/login`}
+                    style={{ background: "#0D0D0D", color: "#FFFFFF", textDecoration: "none", padding: "8px 16px", borderRadius: 10, fontSize: 12, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    Connect GitHub
+                  </a>
+                )}
+              </div>
+            </Card>
           )}
 
           {activeSection === "theme" && (

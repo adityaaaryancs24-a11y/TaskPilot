@@ -135,3 +135,14 @@ CREATE TABLE IF NOT EXISTS agent_memory (
     memory_value TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS oauth_connections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL DEFAULT 'demo-user',
+    provider TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    scope TEXT,
+    github_login TEXT,
+    connected_at TEXT NOT NULL,
+    UNIQUE(user_id, provider)
+);

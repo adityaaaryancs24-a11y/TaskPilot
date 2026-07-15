@@ -19,7 +19,17 @@ _TEAM_MAP: dict[str, str] = {
     "adwika": "backend-team",
     "saatvika": "frontend-team",
 }
+import re
 
+_ISSUE_REF_RE = re.compile(
+    r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)\b",
+    re.IGNORECASE,
+)
+
+def extract_linked_issue_numbers(pr_body: str) -> list[int]:
+    if not pr_body:
+        return []
+    return sorted({int(n) for n in _ISSUE_REF_RE.findall(pr_body)})
 
 def _infer_team(owner: str | None) -> str | None:
     if owner is None:

@@ -24,12 +24,19 @@ class Settings(BaseSettings):
     xai_api_key: str = ""
 
     # ── Connectors ──
-    jira_url: str = ""
+    jira_url: str = ""  # disabled, pending MCP migration
     jira_email: str = ""
     jira_api_token: str = ""
+
+    # GitHub — MCP-based, per-user OAuth (see core/github_oauth.py). No more
+    # static github_token; kept here only as a fallback/legacy field.
     github_token: str = ""
-    github_repo_owner: str = "taskpilot-ai"
-    github_repo_name: str = "backend"
+    github_repo_owner: str = ""
+    github_repo_name: str = ""
+    github_oauth_client_id: str = ""
+    github_oauth_client_secret: str = ""
+    mcp_github_url: str = "http://github-mcp-server:9090/mcp"
+    public_base_url: str = "http://localhost:8000"
     outlook_client_id: str = ""
     outlook_client_secret: str = ""
     outlook_tenant_id: str = ""

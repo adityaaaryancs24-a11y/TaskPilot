@@ -29,6 +29,16 @@ services:
       timeout: 5s
       retries: 5
 
+  # ── GitHub MCP server (self-hosted, official github/github-mcp-server image) ──
+  # No token baked in here — each request carries the per-user OAuth bearer
+  # token from core/mcp_client.py, obtained via /auth/github/login.
+  github-mcp-server:
+    image: ghcr.io/github/github-mcp-server:latest
+    command: ["http", "--port", "9090"]
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
   # ── Backend API ──
   backend:
     build:
@@ -40,6 +50,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
+      MCP_GITHUB_URL: http://github-mcp-server:9090/mcp
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8000}
     ports:
       - "8000:8000"
     depends_on:
@@ -47,6 +59,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      github-mcp-server:
+        condition: service_started
     volumes:
       - ./backend:/app
     restart: unless-stopped

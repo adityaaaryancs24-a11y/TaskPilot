@@ -40,6 +40,9 @@ class Task(BaseModel):
     dedup_members: Optional[list[dict]] = None
     blocking_impact_score: Optional[float] = None
     time_block: Optional[str] = None
+    blocking_impact_score: Optional[float] = None
+    time_block: Optional[str] = None
+    linked_prs: Optional[list[dict]] = None   # NEW: [{pr_url, pr_number, source, linked_at}]
 
 
 class RankedTask(Task):
